@@ -1,0 +1,63 @@
+        -:    0:Source:a1q3.cc
+        -:    0:Graph:a-a1q3.gcno
+        -:    0:Data:a-a1q3.gcda
+        -:    0:Runs:3
+        -:    1:/*
+        -:    2: * CS138, W23, Assignment 1, Problem 3
+        -:    3: * Main Function
+        -:    4: *
+        -:    5: * main function is a special function,
+        -:    6: * which serves as the entry point for the program.
+        -:    7: *
+        -:    8: * Try to keep it as simple as possible
+        -:    9: * and implement the logic of your program
+        -:   10: * in a1q3.cpp, so that you can write unit tests
+        -:   11: * for them and make sure of their expected behavior.
+        -:   12: */
+        -:   13:#include <iostream>
+        -:   14:#include <vector>
+        -:   15:#include <string>
+        -:   16:using namespace std;
+        -:   17:
+        -:   18:// no argc+argv because we aren't using them in A1
+        3:   19:int main()
+        -:   20:{
+        -:   21:    int N;
+        3:   22:    cin >> N;
+        3:   23:    if (N < 0)
+        -:   24:    {
+        1:   25:        cerr << "Error, line length must be positive." << endl;
+        1:   26:        return 1;
+        -:   27:    }
+        -:   28:
+        2:   29:    vector<string> v;
+        2:   30:    cin.ignore();
+        2:   31:    string x;
+       52:   32:    while (cin >> x)
+        -:   33:    {
+       50:   34:        v.push_back(x.substr(0, N));
+        -:   35:    }
+        -:   36:
+        2:   37:    int count = 0;
+       52:   38:    for (string token : v)
+        -:   39:    {
+       50:   40:        if (count == 0)
+        -:   41:        {
+        2:   42:            cout << token;
+        2:   43:            count += token.size();
+        -:   44:        }
+       48:   45:        else if (count + 1 + token.size() > N)
+        -:   46:        {
+       12:   47:            cout << endl
+       12:   48:                 << token;
+       12:   49:            count = token.size();
+        -:   50:        }
+        -:   51:        else
+        -:   52:        {
+       36:   53:            cout << " " << token;
+       36:   54:            count += token.size() + 1;
+        -:   55:        }
+       50:   56:    }
+        2:   57:    cout << endl;
+        2:   58:    return 0;
+        2:   59:}

@@ -1,0 +1,106 @@
+        -:    0:Source:a1q4.cc
+        -:    0:Graph:a-a1q4.gcno
+        -:    0:Data:a-a1q4.gcda
+        -:    0:Runs:4
+        -:    1:/*
+        -:    2: * CS138, W23, Assignment 1, Problem 4
+        -:    3: * Main Function
+        -:    4: *
+        -:    5: * main function is a special function,
+        -:    6: * which serves as the entry point for the program.
+        -:    7: *
+        -:    8: * Try to keep it as simple as possible
+        -:    9: * and implement the logic of your program
+        -:   10: * in a1q4.cpp, so that you can write unit tests
+        -:   11: * for them and make sure of their expected behavior.
+        -:   12: */
+        -:   13:#include <iostream>
+        -:   14:#include <vector>
+        -:   15:#include <string>
+        -:   16:using namespace std;
+        -:   17:
+        -:   18:// no argc+argv because we aren't using them in A1
+        4:   19:int main()
+        -:   20:{
+        -:   21:    int N;
+        4:   22:    cin >> N;
+        4:   23:    if (N < 0)
+        -:   24:    {
+        1:   25:        cerr << "Error, line length must be positive." << endl;
+        1:   26:        return 1;
+        -:   27:    }
+        -:   28:
+        3:   29:    vector<string> v;
+        3:   30:    cin.ignore();
+        3:   31:    string x;
+       50:   32:    while (cin >> x)
+        -:   33:    {
+       47:   34:        v.push_back(x.substr(0, N));
+        -:   35:    }
+        -:   36:
+        3:   37:    vector<string> lines;
+        3:   38:    string curr_line = "";
+       50:   39:    for (string token : v)
+        -:   40:    {
+       47:   41:        if (curr_line.size() == 0)
+        -:   42:        {
+        3:   43:            curr_line += token;
+        -:   44:        }
+       44:   45:        else if (curr_line.size() + 1 + token.size() > N)
+        -:   46:        {
+        8:   47:            lines.push_back(curr_line);
+        8:   48:            curr_line = token;
+        -:   49:        }
+        -:   50:        else
+        -:   51:        {
+       36:   52:            curr_line += " " + token;
+        -:   53:        }
+       47:   54:    }
+        3:   55:    lines.push_back(curr_line);
+        -:   56:
+       14:   57:    for (string line : lines)
+        -:   58:    {
+       11:   59:        if (line.size() == N)
+        -:   60:        {
+        2:   61:            cout << line << endl;
+        2:   62:            continue;
+        -:   63:        }
+        9:   64:        if (line.find(" ") == string::npos)
+        -:   65:        {
+       15:   66:            while (line.size() != N)
+        -:   67:            {
+       12:   68:                line += " ";
+        -:   69:            }
+        3:   70:            cout << line << endl;
+        3:   71:            continue;
+        -:   72:        }
+       13:   73:        while (line.size() != N)
+        -:   74:        {
+        7:   75:            bool ws_flag = false;
+      145:   76:            for (int i = 0; i < line.size(); i++)
+        -:   77:            {
+      144:   78:                if (ws_flag)
+        -:   79:                {
+       21:   80:                    if (line.at(i) != ' ')
+        -:   81:                    {
+       19:   82:                        ws_flag = false;
+       19:   83:                        line.insert(i, 1, ' ');
+       19:   84:                        if (line.size() == N)
+        -:   85:                        {
+        6:   86:                            break;
+        -:   87:                        }
+        -:   88:                    }
+        -:   89:                }
+        -:   90:                else
+        -:   91:                {
+      123:   92:                    if (line.at(i) == ' ')
+        -:   93:                    {
+       19:   94:                        ws_flag = true;
+        -:   95:                    }
+        -:   96:                }
+        -:   97:            }
+        -:   98:        }
+        6:   99:        cout << line << endl;
+       11:  100:    }
+        3:  101:    return 0;
+        3:  102:}

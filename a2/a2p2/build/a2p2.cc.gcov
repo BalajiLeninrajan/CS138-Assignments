@@ -1,0 +1,107 @@
+        -:    0:Source:a2p2.cc
+        -:    0:Graph:a-a2p2.gcno
+        -:    0:Data:a-a2p2.gcda
+        -:    0:Runs:1
+        -:    1:#include <string>
+        -:    2:#include <vector>
+        -:    3:#include <cassert>
+        -:    4:
+        -:    5:#include "a2p2.h"
+        -:    6:
+        -:    7:using namespace std;
+        -:    8:
+        7:    9:Node *makeList(const std::vector<std::string> v)
+        -:   10:{
+        7:   11:    if (v.size() == 0)
+        -:   12:    {
+        1:   13:        return nullptr;
+        -:   14:    }
+        -:   15:
+        6:   16:    Node *head = new Node{};
+        6:   17:    head->next = nullptr;
+        6:   18:    head->val = v.at(0);
+        6:   19:    Node *cur = head;
+        -:   20:
+       14:   21:    for (int i = 1; i < v.size(); i++, cur = cur->next)
+        -:   22:    {
+        8:   23:        Node *newNode = new Node{};
+        8:   24:        newNode->next = nullptr;
+        8:   25:        newNode->val = v.at(i);
+        8:   26:        cur->next = newNode;
+        -:   27:    }
+        -:   28:
+        6:   29:    return head;
+        -:   30:}
+        -:   31:
+        9:   32:std::string list2string(const Node *first)
+        -:   33:{
+        9:   34:    if (!first)
+        -:   35:    {
+        1:   36:        return "";
+        -:   37:    }
+        -:   38:
+        8:   39:    string res;
+       28:   40:    for (res = ""; first; first = first->next)
+        -:   41:    {
+       20:   42:        res += " " + first->val;
+        -:   43:    }
+        8:   44:    res.erase(0, 1);
+        8:   45:    return res;
+        8:   46:}
+        -:   47:
+        2:   48:std::string pair2sortedString(const Node *p1, const Node *p2)
+        -:   49:{
+       2*:   50:    assert(p1 && p2);
+        4:   51:    return p1->val < p2->val ? p1->val + " " + p2->val : p2->val + " " + p1->val;
+        -:   52:}
+        -:   53:
+        2:   54:Node *sortPair(Node *p1, Node *p2)
+        -:   55:{
+       2*:   56:    assert(p1 && p2);
+        2:   57:    if (p1->val < p2->val)
+        -:   58:    {
+        1:   59:        p2->next = nullptr;
+        1:   60:        p1->next = p2;
+        1:   61:        return p1;
+        -:   62:    }
+        -:   63:    else
+        -:   64:    {
+        1:   65:        p1->next = nullptr;
+        1:   66:        p2->next = p1;
+        1:   67:        return p2;
+        -:   68:    }
+        -:   69:}
+        -:   70:
+        2:   71:Node *makeSortedPairList(const std::string s1, const std::string s2)
+        -:   72:{
+        2:   73:    Node *n1 = new Node{s1, nullptr};
+        2:   74:    Node *n2 = new Node{s2, nullptr};
+        2:   75:    if (s1 < s2)
+        -:   76:    {
+        1:   77:        n1->next = n2;
+        1:   78:        return n1;
+        -:   79:    }
+        -:   80:    else
+        -:   81:    {
+        1:   82:        n2->next = n1;
+        1:   83:        return n2;
+        -:   84:    }
+        -:   85:}
+        -:   86:
+        4:   87:Node *append(Node *p1, Node *p2)
+        -:   88:{
+        4:   89:    if (!p1)
+        -:   90:    {
+        2:   91:        return p2;
+        -:   92:    }
+        -:   93:
+        -:   94:    Node *cur;
+        -:   95:
+        6:   96:    for (cur = p1; cur->next; cur = cur->next)
+        -:   97:    {
+        -:   98:    }
+        -:   99:
+        2:  100:    cur->next = p2;
+        -:  101:
+        2:  102:    return p1;
+        -:  103:}

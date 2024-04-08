@@ -1,0 +1,263 @@
+        -:    0:Source:a1q5.cc
+        -:    0:Graph:a-a1q5.gcno
+        -:    0:Data:a-a1q5.gcda
+        -:    0:Runs:10
+        -:    1:/*
+        -:    2: * CS138, W23, Assignment 1, Problem 5
+        -:    3: * Main Function
+        -:    4: *
+        -:    5: * main function is a special function,
+        -:    6: * which serves as the entry point for the program.
+        -:    7: *
+        -:    8: * Try to keep it as simple as possible
+        -:    9: * and implement the logic of your program
+        -:   10: * in a1q5.cpp, so that you can write unit tests
+        -:   11: * for them and make sure of their expected behavior.
+        -:   12: */
+        -:   13:#include <iostream>
+        -:   14:#include <vector>
+        -:   15:#include <string>
+        -:   16:using namespace std;
+        -:   17:
+        -:   18:vector<string> get_usr_strs(int n);
+        -:   19:vector<string> generate_lines(vector<string> strs, int n, bool flag);
+        -:   20:
+        -:   21:vector<string> text_justify(vector<string> lines, int n);
+        -:   22:string line_justify(string line, int n);
+        -:   23:string sentence_justify(string line, int n);
+        -:   24:
+        -:   25:vector<string> text_r_right(vector<string> lines, int n);
+        -:   26:vector<string> text_r_left(vector<string> lines, int n);
+        -:   27:vector<string> text_center(vector<string> lines, int n);
+        -:   28:
+        -:   29:void print_vector(vector<string> lines, bool flag);
+        -:   30:
+        -:   31:// no argc+argv because we aren't using them in A1
+       10:   32:int main()
+        -:   33:{
+        -:   34:    int N;
+       10:   35:    string c1;
+        -:   36:    char c2;
+       10:   37:    cin >> N >> c1 >> c2;
+       10:   38:    if (N < 0)
+        -:   39:    {
+        1:   40:        cerr << "Error, line length must be positive." << endl;
+        1:   41:        return 1;
+        -:   42:    }
+        -:   43:
+        9:   44:    bool filter_fnord = false;
+        9:   45:    bool reverse_flag = false;
+        -:   46:
+        9:   47:    if (c1 != "rr" && c1 != "j" && c1 != "rl" && c1 != "c")
+        -:   48:    {
+        1:   49:        cerr << "Error, command is illegal." << endl;
+        1:   50:        return 1;
+        -:   51:    }
+        -:   52:
+        8:   53:    if (c2 == 'g')
+        -:   54:    {
+        1:   55:        filter_fnord = true;
+        -:   56:    }
+        7:   57:    else if (c2 == 'r')
+        -:   58:    {
+        1:   59:        reverse_flag = true;
+        -:   60:    }
+        6:   61:    else if (c2 != 'f')
+        -:   62:    {
+        1:   63:        cerr << "Error, command is illegal." << endl;
+        1:   64:        return 1;
+        -:   65:    }
+        -:   66:
+        7:   67:    vector<string> v = get_usr_strs(N);
+        7:   68:    vector<string> lines = generate_lines(v, N, filter_fnord);
+        -:   69:
+        7:   70:    if (c1 == "rr")
+        -:   71:    {
+        3:   72:        lines = text_r_right(lines, N);
+        -:   73:    }
+        4:   74:    else if (c1 == "j")
+        -:   75:    {
+        2:   76:        lines = text_justify(lines, N);
+        -:   77:    }
+        2:   78:    else if (c1 == "rl")
+        -:   79:    {
+        1:   80:        lines = text_r_left(lines, N);
+        -:   81:    }
+        -:   82:    else
+        -:   83:    {
+        1:   84:        lines = text_center(lines, N);
+        -:   85:    }
+        -:   86:
+        7:   87:    print_vector(lines, reverse_flag);
+        7:   88:    return 0;
+       10:   89:}
+        -:   90:
+        7:   91:vector<string> get_usr_strs(int n)
+        -:   92:{
+        7:   93:    vector<string> v;
+        7:   94:    cin.ignore();
+        7:   95:    string x;
+      273:   96:    while (cin >> x)
+        -:   97:    {
+      266:   98:        v.push_back(x.substr(0, n));
+        -:   99:    }
+       14:  100:    return v;
+        7:  101:}
+        -:  102:
+        7:  103:vector<string> generate_lines(vector<string> strs, int n, bool flag)
+        -:  104:{
+        7:  105:    vector<string> lines;
+        7:  106:    string curr_line = "";
+      273:  107:    for (string token : strs)
+        -:  108:    {
+      266:  109:        if (curr_line.size() == 0)
+        -:  110:        {
+        7:  111:            curr_line += token;
+        -:  112:        }
+      259:  113:        else if (curr_line.size() + 1 + token.size() > n)
+        -:  114:        {
+       43:  115:            if (!flag || curr_line.find("fnord") != string::npos)
+        -:  116:            {
+       38:  117:                lines.push_back(curr_line);
+        -:  118:            }
+       43:  119:            curr_line = token;
+        -:  120:        }
+        -:  121:        else
+        -:  122:        {
+      216:  123:            curr_line += " " + token;
+        -:  124:        }
+      266:  125:    }
+        7:  126:    if (!flag || curr_line.find("fnord") != string::npos)
+        -:  127:    {
+        6:  128:        lines.push_back(curr_line);
+        -:  129:    }
+       14:  130:    return lines;
+        7:  131:}
+        -:  132:
+        3:  133:vector<string> text_r_right(vector<string> lines, int n)
+        -:  134:{
+        3:  135:    vector<string> res;
+       21:  136:    for (string line : lines)
+        -:  137:    {
+       60:  138:        while (line.size() != n)
+        -:  139:        {
+       42:  140:            line += " ";
+        -:  141:        }
+       18:  142:        res.push_back(line);
+       18:  143:    }
+        3:  144:    return res;
+    =====:  145:}
+        -:  146:
+        2:  147:vector<string> text_justify(vector<string> lines, int n)
+        -:  148:{
+        2:  149:    vector<string> res;
+       12:  150:    for (string line : lines)
+        -:  151:    {
+       10:  152:        res.push_back(line_justify(line, n));
+       10:  153:    }
+        2:  154:    return res;
+    =====:  155:}
+        -:  156:
+       10:  157:string line_justify(string line, int n)
+        -:  158:{
+       10:  159:    if (line.size() == n)
+        -:  160:    {
+        2:  161:        return line;
+        -:  162:    }
+        8:  163:    if (line.find(" ") == string::npos)
+        -:  164:    {
+        5:  165:        while (line.size() != n)
+        -:  166:        {
+        3:  167:            line += " ";
+        -:  168:        }
+        2:  169:        return line;
+        -:  170:    }
+        -:  171:
+        6:  172:    return sentence_justify(line, n);
+        -:  173:}
+        -:  174:
+        7:  175:string sentence_justify(string line, int n)
+        -:  176:{
+        -:  177:    while (true)
+        -:  178:    {
+        7:  179:        bool ws_flag = false;
+      145:  180:        for (int i = 0; i < line.size(); i++)
+        -:  181:        {
+      144:  182:            if (ws_flag)
+        -:  183:            {
+       21:  184:                if (line.at(i) != ' ')
+        -:  185:                {
+       19:  186:                    ws_flag = false;
+       19:  187:                    line.insert(i, 1, ' ');
+       19:  188:                    if (line.size() == n)
+        -:  189:                    {
+        6:  190:                        return line;
+        -:  191:                    }
+        -:  192:                }
+        -:  193:            }
+        -:  194:            else
+        -:  195:            {
+      123:  196:                if (line.at(i) == ' ')
+        -:  197:                {
+       19:  198:                    ws_flag = true;
+        -:  199:                }
+        -:  200:            }
+        -:  201:        }
+        1:  202:    }
+        -:  203:}
+        -:  204:
+        1:  205:vector<string> text_r_left(vector<string> lines, int n)
+        -:  206:{
+        1:  207:    vector<string> res;
+        9:  208:    for (string line : lines)
+        -:  209:    {
+       27:  210:        while (line.size() != n)
+        -:  211:        {
+       19:  212:            line = " " + line;
+        -:  213:        }
+        8:  214:        res.push_back(line);
+        8:  215:    }
+        1:  216:    return res;
+    =====:  217:}
+        -:  218:
+        1:  219:vector<string> text_center(vector<string> lines, int n)
+        -:  220:{
+        1:  221:    vector<string> res;
+        9:  222:    for (string line : lines)
+        -:  223:    {
+        8:  224:        bool fb_flag = true;
+       27:  225:        while (line.size() != n)
+        -:  226:        {
+       19:  227:            if (fb_flag)
+        -:  228:            {
+       11:  229:                line = " " + line;
+       11:  230:                fb_flag = !fb_flag;
+        -:  231:            }
+        -:  232:            else
+        -:  233:            {
+        8:  234:                line += " ";
+        8:  235:                fb_flag = !fb_flag;
+        -:  236:            }
+        -:  237:        }
+        8:  238:        res.push_back(line);
+        8:  239:    }
+        1:  240:    return res;
+    =====:  241:}
+        -:  242:
+        7:  243:void print_vector(vector<string> lines, bool flag)
+        -:  244:{
+        7:  245:    if (flag)
+        -:  246:    {
+        9:  247:        for (int i = lines.size() - 1; i >= 0; i--)
+        -:  248:        {
+        8:  249:            cout << lines.at(i) << endl;
+        -:  250:        }
+        -:  251:    }
+        -:  252:    else
+        -:  253:    {
+       42:  254:        for (string line : lines)
+        -:  255:        {
+       36:  256:            cout << line << endl;
+       36:  257:        }
+        -:  258:    }
+        7:  259:}
